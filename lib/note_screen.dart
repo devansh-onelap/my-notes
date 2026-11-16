@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:my_notes/note.dart';
 import 'package:my_notes/note_card.dart';
@@ -74,7 +75,7 @@ class _NoteScreenState extends State<NoteScreen> {
                   SizedBox(width: 6,),
                   ElevatedButton(
                     onPressed: () {
-                      _cancelNote();
+                      Navigator.pop(context);
                     },
                     child: Text("cancel"),
                   )
@@ -85,6 +86,56 @@ class _NoteScreenState extends State<NoteScreen> {
         );
       }
     );
+  }
+
+  void _showDeleteConfirmationDialog(Note note) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Delete note"),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Are you sure you want to delete the note?"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _deleteNote(note);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight(700)
+                      )
+                    ),
+                    child: Text("Delete"),
+                  ),
+                  SizedBox(width: 6,),
+                  ElevatedButton(
+                    onPressed: _cancelNote,
+                    child: Text("Cancel"),
+                  )
+                ],
+              )
+            ],
+          )
+        );
+      }
+    );
+  }
+
+  void _deleteNote(Note note) {
+    setState(() {
+          notes.remove(note);
+    });
+    Navigator.pop(context);
   }
 
   void _saveNote() {
@@ -118,18 +169,7 @@ class _NoteScreenState extends State<NoteScreen> {
   }
 
   String _getCurrentDate() {
-    final now = DateTime.now();
-
-    return "${now.day} ${_getMonthName(now.month)} ${now.year}";
-  }
-
-  String _getMonthName(int month) {
-    const months = [
-      "Jan", "Feb", "Mar", "Apr",
-      "May", "Jun", "Jul", "Aug",
-      "Sep", "Oct", "Nov", "Dec"
-    ];
-    return months[month - 1];
+    return DateFormat("d MMM yyyy").format(DateTime.now());
   }
 
   @override
@@ -160,8 +200,8 @@ class _NoteScreenState extends State<NoteScreen> {
                     children: [
                       Image.asset(
                         "assets/images/notes_logo.png",
-                        width: 36,
-                        height: 36,
+                        width: 32,
+                        height: 32,
                         fit: BoxFit.contain,
                       ),
                       SizedBox(width: 12,),
@@ -187,7 +227,10 @@ class _NoteScreenState extends State<NoteScreen> {
               isFavourite: note.isFavourite,
               onFavouriteTap: () {
                 onFavouriteTap(note);
-              }
+              },
+              onDeleteTap: () {
+                _showDeleteConfirmationDialog(note);
+              },
             );
           },
         ),

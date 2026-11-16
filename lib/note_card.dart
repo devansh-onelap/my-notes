@@ -6,6 +6,7 @@ class NoteCard extends StatelessWidget {
   final String creationDate;
   final bool isFavourite;
   final VoidCallback onFavouriteTap;
+  final VoidCallback onDeleteTap;
 
   const NoteCard({
     super.key,
@@ -13,7 +14,8 @@ class NoteCard extends StatelessWidget {
     required this.description,
     required this.creationDate,
     required this.isFavourite,
-    required this.onFavouriteTap
+    required this.onFavouriteTap,
+    required this.onDeleteTap
   });
 
   @override
@@ -50,11 +52,33 @@ class NoteCard extends StatelessWidget {
           SizedBox(height: 12,),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.calendar_today, size: 14,),
-              SizedBox(width: 6,),
-              Text(creationDate, style: TextStyle(fontSize: 12),)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.calendar_today, size: 14,),
+                  SizedBox(width: 6,),
+                  Text(creationDate, style: TextStyle(fontSize: 12),)
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      print("Clicked edit");
+                    },
+                    icon: Icon(Icons.edit, size: 18,),
+                  ),
+                  IconButton(
+                    onPressed: onDeleteTap,
+                    icon: Icon(Icons.delete, size: 18,),
+                  )
+                ],
+              )
             ],
           )
         ],
