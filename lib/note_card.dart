@@ -4,8 +4,17 @@ class NoteCard extends StatelessWidget {
   final String title;
   final String description;
   final String creationDate;
+  final bool isFavourite;
+  final VoidCallback onFavouriteTap;
 
-  const NoteCard({super.key, required this.title, required this.description, required this.creationDate});
+  const NoteCard({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.creationDate,
+    required this.isFavourite,
+    required this.onFavouriteTap
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +37,12 @@ class NoteCard extends StatelessWidget {
               Expanded (
                 child: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-              Icon(Icons.favorite, color: Colors.red, size: 24,)
+              IconButton(
+                onPressed: onFavouriteTap,
+                icon: isFavourite? Icon(Icons.favorite, color: Colors.red) :
+                Icon(Icons.favorite_border, color: Colors.grey),
+                iconSize: 24,
+              )
             ],
           ),
           SizedBox(height: 12,),
