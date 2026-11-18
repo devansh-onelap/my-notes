@@ -14,8 +14,8 @@ class _NoteScreenState extends State<NoteScreen> {
 
   List<Note> notes = [
     Note(
-      title: "Flutter Learning",
-      description: "Learning Flutter fundamentals",
+      title: "Flutter Learning test anotherdjfkdsk fldsajkf jldsjf adsjlkfdjkla test",
+      description: "Learning Flutter fundamentals dfjkajkdfakl df dfa dfadfajkajkdfakl tdfjkajkdfakl test",
       creationDate: "14 Nov 2026",
       isFavourite: true
     ),
@@ -44,21 +44,34 @@ class _NoteScreenState extends State<NoteScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-
             children: [
               Text("Title"),
+              SizedBox(height: 6,),
               TextField(
                 controller: titleController,
                 decoration: InputDecoration(
                   hintText: "Enter title here",
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
               SizedBox(height: 24),
               Text("Description"),
+              SizedBox(height: 6,),
               TextField(
                 controller: descriptionController,
                 decoration: InputDecoration(
-                  hintText: "Enter description here"
+                  hintText: "Enter description here",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(10)
+                  )
                 ),
               ),
               SizedBox(height: 24),
@@ -70,6 +83,11 @@ class _NoteScreenState extends State<NoteScreen> {
                     onPressed: () {
                       _saveNote();
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xfa59eae5),
+                      foregroundColor: Colors.white,
+                      textStyle: TextStyle(fontWeight: FontWeight.bold)
+                    ),
                     child: Text("Save"),
                   ),
                   SizedBox(width: 6,),
@@ -77,7 +95,7 @@ class _NoteScreenState extends State<NoteScreen> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("cancel"),
+                    child: Text("Cancel"),
                   )
                 ],
               )
@@ -186,6 +204,8 @@ class _NoteScreenState extends State<NoteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
         appBar: AppBar(
             title: Container(
@@ -215,7 +235,8 @@ class _NoteScreenState extends State<NoteScreen> {
             ),
             backgroundColor: Color(0xfa59eae5)
         ),
-        body: ListView.builder(
+        body: screenWidth < 600?
+        ListView.builder(
           itemCount: notes.length,
           padding: EdgeInsets.all(12),
           itemBuilder: (context, index) {
@@ -233,13 +254,40 @@ class _NoteScreenState extends State<NoteScreen> {
               },
             );
           },
+        ) :
+      GridView.builder(
+        itemCount: notes.length,
+        padding: EdgeInsets.all(12),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          mainAxisExtent: 160,
         ),
+        itemBuilder: (context, index) {
+          final note = notes[index];
+
+          return NoteCard(
+            title: note.title,
+            description: note.description,
+            creationDate: note.creationDate,
+            isFavourite: note.isFavourite,
+            onFavouriteTap: () {
+              onFavouriteTap(note);
+            },
+            onDeleteTap: () {
+              _showDeleteConfirmationDialog(note);
+            },
+          );
+        },
+      ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _showCreateNoteDialog();
           },
           backgroundColor: Color(0xfa59eae5),
-          child: Icon(Icons.add),
+          foregroundColor: Colors.white,
+          child: Icon(Icons.add, size: 26,),
         ),
     );
   }
