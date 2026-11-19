@@ -159,22 +159,22 @@ class _NoteScreenState extends State<NoteScreen> {
   void _saveNote() {
     final String title = titleController.text.trim();
     final String description = descriptionController.text.trim();
+
     if (title.isEmpty || description.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Both title and description are required"),
-        )
+        const SnackBar(content: Text("Both title and description are required")),
       );
-    } else {
-      Note newNote = Note(
-          title: title,
-          description: description,
-          creationDate: _getCurrentDate()
-      );
-      setState(() {
-        notes.add(newNote);
-      });
+      return;
     }
+
+    setState(() {
+      notes.add(Note(
+        title: title,
+        description: description,
+        creationDate: _getCurrentDate(),
+      ));
+    });
+
     titleController.clear();
     descriptionController.clear();
     Navigator.pop(context);
@@ -207,8 +207,9 @@ class _NoteScreenState extends State<NoteScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        appBar: AppBar(
-            title: Container(
+        appBar:
+        AppBar(
+            title: SizedBox(
               height: 74,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

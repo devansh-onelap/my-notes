@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:my_notes/note_screen.dart';
 import 'note_card.dart';
