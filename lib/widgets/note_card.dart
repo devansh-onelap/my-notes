@@ -1,4 +1,4 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 
 class NoteCard extends StatelessWidget {
   final String title;
@@ -7,6 +7,7 @@ class NoteCard extends StatelessWidget {
   final bool isFavourite;
   final VoidCallback onFavouriteTap;
   final VoidCallback onDeleteTap;
+  final VoidCallback onEditTap;
 
   const NoteCard({
     super.key,
@@ -15,7 +16,8 @@ class NoteCard extends StatelessWidget {
     required this.creationDate,
     required this.isFavourite,
     required this.onFavouriteTap,
-    required this.onDeleteTap
+    required this.onDeleteTap,
+    required this.onEditTap
   });
 
   @override
@@ -25,7 +27,7 @@ class NoteCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12)
       ),
-      color: Color(0xffdcfbfa),
+      color: Color(0xffe5fffe),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -80,9 +82,7 @@ class NoteCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          onPressed: () {
-                            print("Clicked edit");
-                          },
+                          onPressed: onEditTap,
                           icon: Icon(Icons.edit, size: 18,),
                         ),
                         IconButton(
