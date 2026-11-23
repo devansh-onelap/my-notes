@@ -8,8 +8,9 @@ import 'package:my_notes/widgets/note_card.dart';
 class NoteScreen extends GetView<NotesController> {
   NoteScreen({super.key});
 
-  void _saveNote(BuildContext context) {
-    final error = controller.addNote();
+  Future<void> _saveNote(BuildContext context) async {
+    final error = await controller.addNote();
+    if (!context.mounted) return;
 
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -20,8 +21,9 @@ class NoteScreen extends GetView<NotesController> {
     Navigator.pop(context);
   }
 
-  void _updateNote(BuildContext context, {required Note note}) {
-    final error = controller.editNote(note.id);
+  Future<void> _updateNote(BuildContext context, {required Note note}) async {
+    final error = await controller.editNote(note.id);
+    if (!context.mounted) return;
 
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -207,6 +209,17 @@ class NoteScreen extends GetView<NotesController> {
       ),
       body: Obx(() {
         print("obx body build");
+
+        // spinner while the first load happens
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // friendly message when there are no notes
+        if (controller.notes.isEmpty) {
+          return const Center(child: Text("No notes yet. Tap + to create one."));
+        }
+
         return screenWidth < 600?
         ListView.builder(
           itemCount: controller.notes.length,

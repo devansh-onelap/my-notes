@@ -1,50 +1,64 @@
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/data/notes_repository.dart';
 import 'package:my_notes/models/note.dart';
 
 class NotesController extends GetxController {
+  NotesController(this._repository);
+  final NotesRepository _repository;
 
-  final notes = <Note>[
-    Note(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        title: "Flutter Learning test anotherdjfkdsk fldsajkf jldsjf adsjlkfdjkla test",
-        description: "Learning Flutter fundamentals dfjkajkdfakl df dfa dfadfajkajkdfakl tdfjkajkdfakl test",
-        creationDate: "14 Nov 2026",
-        isFavourite: true
-    ),
-    Note(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
-      title: "Daily Tasks",
-      description: "Complete today's goals",
-      creationDate: "13 Nov 2026",
-    ),
-  ].obs;
+  final notes = <Note>[].obs;
+  final isLoading = true.obs;
 
   bool isGridView = false;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+
+  // load notes when the controller starts
+  @override
+  void onInit() {
+    super.onInit();
+    loadNotes();
+  }
+
+  Future<void> loadNotes() async {
+    isLoading.value = true;
+    try {
+      notes.assignAll(await _repository.getAllNotes());
+    } catch (e) {
+      print(' Failed to load notes: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   void toggleView() {
     isGridView = !isGridView;
     update(["viewMode"]);
   }
 
-  String? addNote() {
-    String title = titleController.text.trim();
-    String description = descriptionController.text.trim();
+  Future<String?> addNote() async {
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
 
     if (title.isEmpty || description.isEmpty) {
       return "title or description cannot be empty";
     }
 
-    notes.add(Note(
+    final note = Note(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       creationDate: _getCurrentDate(),
       title: title,
       description: description,
-      isFavourite: false
-    ));
+    );
+
+    try {
+      await _repository.insertNote(note);
+    } catch (e) {
+      return "Could not save note: $e";
+    }
+    notes.add(note);
 
     clearForm();
     return null;
@@ -54,9 +68,9 @@ class NotesController extends GetxController {
     return DateFormat("d MMM yyyy").format(DateTime.now());
   }
 
-  String? editNote(String id) {
-    String title = titleController.text.trim();
-    String description = descriptionController.text.trim();
+  Future<String?> editNote(String id) async {
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
 
     final index = notes.indexWhere((n) => n.id == id);
     if (index == -1) return "Note not found with id: $id";
@@ -65,33 +79,38 @@ class NotesController extends GetxController {
       return "title or description cannot be empty";
     }
 
-    notes[index] = notes[index].copyWith(
-      title: title,
-      description: description
-    );
+    final updated = notes[index].copyWith(title: title, description: description);
+
+    try {
+      await _repository.updateNote(updated);
+    } catch (e) {
+      return "Could not update note: $e";
+    }
+    notes[index] = updated;
 
     clearForm();
     return null;
   }
 
-  void deleteNote(String id) {
-    final index = notes.indexWhere((n) => n.id == id);
-    if (index == -1) return;
-    notes.removeAt(index);
+  Future<void> deleteNote(String id) async {
+    await _repository.deleteNote(id);
+    notes.removeWhere((n) => n.id == id);
   }
 
-  void toggleFavourite(String id) {
+  Future<void> toggleFavourite(String id) async {
     final index = notes.indexWhere((n) => n.id == id);
     if (index == -1) return;
 
-    notes[index] = notes[index].copyWith(isFavourite: !notes[index].isFavourite);
+    final updated = notes[index].copyWith(isFavourite: !notes[index].isFavourite);
+    await _repository.updateNote(updated);
+    notes[index] = updated;
   }
 
   void loadNoteForEditing(String id) {
     final index = notes.indexWhere((n) => n.id == id);
     if (index == -1) return;
 
-    Note note = notes[index];
+    final note = notes[index];
     titleController.text = note.title;
     descriptionController.text = note.description;
   }
@@ -110,5 +129,4 @@ class NotesController extends GetxController {
     descriptionController.dispose();
     super.onClose();
   }
-
 }
