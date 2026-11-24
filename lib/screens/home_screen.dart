@@ -85,8 +85,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 8),
             BlocBuilder<NotesCubit, NoteState>(
               builder: (context, state) => Text(
-                'You have ${state.notes.length} notes · '
-                    '${state.favouriteCount} favourites',
+                'You have ${state.notes.length} notes & ${state.favouriteCount} favourites',
                 style: textTheme.bodyLarge,
               ),
             ),
