@@ -13,7 +13,7 @@ class NoteAdapter extends TypeAdapter<Note> {
 
   @override
   void write(BinaryWriter writer, Note obj) {
-    writer.writeByte(5);                              // number of fields
+    writer.writeByte(5);
 
     writer.writeByte(_id);           writer.write(obj.id);
     writer.writeByte(_title);        writer.write(obj.title);
