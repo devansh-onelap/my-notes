@@ -3,7 +3,6 @@ import 'package:my_notes/routes/app_routes.dart';
 import 'package:my_notes/screens/home_screen.dart';
 import 'package:my_notes/screens/note_screen.dart';
 
-// app routerffdfdf
 class AppRouter {
   AppRouter._();
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
