@@ -64,7 +64,6 @@ class NoteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    print("Note screen build method");
 
     return Scaffold(
       appBar: AppBar(

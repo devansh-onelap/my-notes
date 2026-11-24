@@ -19,7 +19,6 @@ class SqliteNotesRepository implements NotesRepository {
 
   Future<Database> _initDatabase() async {
     final path = join(await getDatabasesPath(), _databaseName);
-    print('SQLite notes DB: $path');
 
     return openDatabase(
       path,
@@ -29,7 +28,6 @@ class SqliteNotesRepository implements NotesRepository {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    print('Creating notes table');
     await db.execute('''
       CREATE TABLE $_tableNotes (
         id            TEXT    PRIMARY KEY,

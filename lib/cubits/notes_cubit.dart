@@ -100,6 +100,5 @@ class NotesCubit extends Cubit<NoteState> {
   @override
   void onChange(Change<NoteState> change) {
     super.onChange(change);
-    print("ST: ${change.currentState.status.name} -> ${change.nextState.status.name}");
   }
 }

@@ -4,7 +4,7 @@ import 'package:my_notes/cubits/note_state.dart';
 import 'package:my_notes/cubits/notes_cubit.dart';
 
 class FavouriteBadge extends StatelessWidget {
-  FavouriteBadge({super.key});
+  const FavouriteBadge({super.key});
 
   @override
   Widget build(BuildContext context) {
