@@ -27,6 +27,7 @@ class HiveNotesRepository implements NotesRepository {
 
   @override
   Future<void> insertNote(Note note) async {
+    // throw Exception('Disk full');
     await _box.put(note.id, note);               // key = note's own id
   }
 
