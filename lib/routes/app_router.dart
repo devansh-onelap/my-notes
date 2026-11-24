@@ -3,6 +3,8 @@ import 'package:my_notes/routes/app_routes.dart';
 import 'package:my_notes/screens/home_screen.dart';
 import 'package:my_notes/screens/note_screen.dart';
 
+
+// test1
 class AppRouter {
   AppRouter._();
   // added comment
