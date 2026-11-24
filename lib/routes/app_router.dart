@@ -3,12 +3,9 @@ import 'package:my_notes/routes/app_routes.dart';
 import 'package:my_notes/screens/home_screen.dart';
 import 'package:my_notes/screens/note_screen.dart';
 
-
-// t1
-// test2
+// app router
 class AppRouter {
   AppRouter._();
-  // added comment
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.home:
