@@ -99,17 +99,15 @@ class _NoteDialogState extends State<NoteDialog> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ElevatedButton(
+              FilledButton(
                 onPressed: _save,
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xfa59eae5),
-                    foregroundColor: Colors.white,
                     textStyle: TextStyle(fontWeight: FontWeight.bold)
                 ),
                 child: Text(widget.note == null? "Save" : "Update"),
               ),
               SizedBox(width: 6,),
-              ElevatedButton(
+              FilledButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },

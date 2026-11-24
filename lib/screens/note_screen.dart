@@ -1,15 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:my_notes/controllers/notes_controller.dart';
 import 'package:my_notes/cubits/note_state.dart';
 import 'package:my_notes/cubits/notes_cubit.dart';
+import 'package:my_notes/cubits/theme_cubit.dart';
 import 'package:my_notes/models/note.dart';
 import 'package:my_notes/widgets/favourite_badge.dart';
 import 'package:my_notes/widgets/note_card.dart';
 import 'package:my_notes/widgets/note_dialog.dart';
 
-class NoteScreen extends GetView<NotesController> {
+class NoteScreen extends StatelessWidget {
   const NoteScreen({super.key});
 
   void _cancelNote(BuildContext context) {
@@ -69,41 +68,44 @@ class NoteScreen extends GetView<NotesController> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 64,
-          title: SizedBox(
-            height: 74,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/notes_logo.png",
-                          width: 32,
-                          height: 32,
-                          fit: BoxFit.contain,
-                        ),
-                        SizedBox(width: 12,),
-                        Text("My Notes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                      ],
-                    ),
-                    FavouriteBadge()
-                  ],
-                ),
-                SizedBox(height: 3),
-                Text("Your thoughts, all in one place", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),
-              ],
-            ),
+      toolbarHeight: 64,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Image.asset(
+                'assets/images/notes_logo.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'My Notes',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ],
           ),
-          backgroundColor: Color(0xfa59eae5)
+          const SizedBox(height: 3),
+          const Text(
+            'Your thoughts, all in one place',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
+      actions: [
+        FavouriteBadge(),
+        BlocBuilder<ThemeCubit, bool>(
+          builder: (context, isDark) => IconButton(
+            tooltip: isDark ? 'Switch to light mode' : 'Switch to dark mode',
+            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+          ),
+        ),
+        const SizedBox(width: 8),
+      ],
+    ),
       body: BlocBuilder<NotesCubit, NoteState>(
         builder: (context, state) {
 
@@ -165,9 +167,7 @@ class NoteScreen extends GetView<NotesController> {
           context: context,
           builder: (_) => NoteDialog()
         ),
-        backgroundColor: Color(0xfa59eae5),
-        foregroundColor: Colors.white,
-        child: Icon(Icons.add, size: 26,),
+        child: Icon(Icons.add, size: 26),
       ),
     );
   }
