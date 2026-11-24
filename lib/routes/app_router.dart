@@ -5,7 +5,7 @@ import 'package:my_notes/screens/note_screen.dart';
 
 class AppRouter {
   AppRouter._();
-
+  // added comment
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.home:
